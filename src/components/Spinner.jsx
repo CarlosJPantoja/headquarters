@@ -1,5 +1,4 @@
-import { Box, CircularProgress, Grid } from "@mui/material";
-import { green } from "@mui/material/colors";
+import { Box, CircularProgress, Grid } from "@mui/material"
 
 const Spinner = ({Icon}) => {
     return (

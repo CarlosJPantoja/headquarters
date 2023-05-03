@@ -1,7 +1,8 @@
-import { Delete, Edit } from "@mui/icons-material"
-import { Button, Fab, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
+import { Check, Close, Delete, Edit } from "@mui/icons-material"
+import { Fab, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
+import { Link } from "react-router-dom"
 
-const HeadquartersTable = ({ headquarters, handleEdit, handleDelete }) => {
+const HeadquartersTable = ({ headquarters, name, handleEdit, handleDelete }) => {
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }}>
@@ -23,23 +24,28 @@ const HeadquartersTable = ({ headquarters, handleEdit, handleDelete }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {headquarters.map((headquarter) => (
+                    {headquarters.filter((headquarter) => name == '' || headquarter.name.toLowerCase().includes(name.toLowerCase()))
+                    .map((headquarter) => (
                         <TableRow key={headquarter.id}>
-                            <TableCell align="center">{headquarter.name}</TableCell>
+                            <TableCell align="center">
+                                <Link style={{ color: '#0464ac' }} onClick={() => { }}>
+                                    {headquarter.name}
+                                </Link>
+                            </TableCell>
                             <TableCell align="center">{headquarter.contact.name}</TableCell>
                             <TableCell align="center">{headquarter.contact.phone}</TableCell>
                             <TableCell align="center">{headquarter.contact.email}</TableCell>
                             <TableCell align="center">{headquarter.location.city}</TableCell>
                             <TableCell align="center">{headquarter.location.address}</TableCell>
                             <TableCell align="center">{headquarter.location.zipcode}</TableCell>
-                            <TableCell align="center">{headquarter.active ? 'True' : 'False'}</TableCell>
+                            <TableCell align="center">{headquarter.active ? <Check color="secondary" /> : <Close color="error"/>}</TableCell>
                             <TableCell align="center">
-                                <Fab color="primary" size="medium" onClick={() => { handleEdit(headquarter) }} aria-label="add" sx={{ color: 'white' }}>
+                                <Fab color="primary" size="medium" onClick={() => { handleEdit(headquarter) }} aria-label="edit" sx={{ color: 'white' }}>
                                     <Edit />
                                 </Fab>
                             </TableCell>
                             <TableCell align="center">
-                                <Fab color="error" size="medium" onClick={() => { handleDelete(headquarter) }} aria-label="add" sx={{ color: 'white' }}>
+                                <Fab color="error" size="medium" onClick={() => { handleDelete(headquarter) }} aria-label="delete" sx={{ color: 'white' }}>
                                     <Delete />
                                 </Fab>
                             </TableCell>

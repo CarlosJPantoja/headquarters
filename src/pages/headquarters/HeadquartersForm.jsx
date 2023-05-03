@@ -1,20 +1,37 @@
-import { Grid, TextField, Stack, Button, Box, MenuItem } from "@mui/material"
+import { Grid, TextField, Box, MenuItem, Fab } from "@mui/material"
 import { doc, setDoc } from "firebase/firestore"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
-import Header from "../../components/Header"
 import firestore from "../../util/firebase"
+import { Cancel, Check, Close, Save } from "@mui/icons-material"
 
-const HeadquartersForm = ({ headquarter, setHeadquarter, update, getHeadquarters }) => {
+const HeadquartersForm = ({ headquarter, headquarters, setHeadquarter, getHeadquarters }) => {
 
     const MySwal = withReactContent(Swal)
 
     const handleSave = (event) => {
         event.preventDefault()
+        if (headquarters.filter(h => h.id !== headquarter.id).filter(h => h.name.trim().toLowerCase() === headquarter.name.trim().toLowerCase()).length > 0) {
+            MySwal.fire({
+                icon: 'error',
+                title: 'Error saving headquarter',
+                text: 'There is already a headquarter with that name',
+                confirmButtonText: 'Try again',
+                confirmButtonColor: '#0464ac'
+            })
+            return
+        }
+        MySwal.fire({
+            title: 'Headquarter saved!',
+            text: "You can see it in the table below.",
+            icon: 'success',
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#0464ac'
+        })
         setDoc(doc(firestore, "headquarters", headquarter.id), headquarter)
             .then(() => {
-                getHeadquarters()
                 setHeadquarter(null)
+                getHeadquarters()
             })
     }
 
@@ -24,10 +41,9 @@ const HeadquartersForm = ({ headquarter, setHeadquarter, update, getHeadquarters
 
     return (
         <>
-            <Header title={update ? "Edit headquarter" : "Create headquarter"} />
             <Box component="form" noValidate onSubmit={handleSave}>
-                <Grid container item spacing={3} xs={10} justifyContent={"center"} sx={{ mb: 2 }}>
-                    <Grid item xs={8}>
+                <Grid container item spacing={3} xs={12} sm={12} paddingX={1}>
+                    <Grid item xs={12} sm={8}>
                         <TextField
                             required
                             id="headquarter-name"
@@ -40,7 +56,7 @@ const HeadquartersForm = ({ headquarter, setHeadquarter, update, getHeadquarters
                             onChange={(event) => setHeadquarter({ ...headquarter, name: event.target.value })}
                         />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             required
                             select
@@ -50,21 +66,21 @@ const HeadquartersForm = ({ headquarter, setHeadquarter, update, getHeadquarters
                             fullWidth
                             autoComplete="active"
                             variant="standard"
-                            defaultValue={headquarter.active}
+                            value={headquarter.active}
                             onChange={(event) => setHeadquarter({ ...headquarter, active: event.target.value })}
                             SelectProps={{
                                 style: { textAlign: 'left' }
                             }}
                         >
                             <MenuItem key={0} value={false}>
-                                False
+                                <Close color="error" />
                             </MenuItem>
                             <MenuItem key={1} value={true}>
-                                True
+                                <Check color="secondary" />
                             </MenuItem>
                         </TextField>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             required
                             id="headquarter-contact-name"
@@ -77,7 +93,7 @@ const HeadquartersForm = ({ headquarter, setHeadquarter, update, getHeadquarters
                             onChange={(event) => setHeadquarter({ ...headquarter, contact: { ...headquarter.contact, name: event.target.value } })}
                         />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             required
                             id="headquarter-contact-phone"
@@ -90,7 +106,7 @@ const HeadquartersForm = ({ headquarter, setHeadquarter, update, getHeadquarters
                             onChange={(event) => setHeadquarter({ ...headquarter, contact: { ...headquarter.contact, phone: event.target.value } })}
                         />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             required
                             id="headquarter-contact-email"
@@ -103,7 +119,7 @@ const HeadquartersForm = ({ headquarter, setHeadquarter, update, getHeadquarters
                             onChange={(event) => setHeadquarter({ ...headquarter, contact: { ...headquarter.contact, email: event.target.value } })}
                         />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             required
                             id="headquarter-location-city"
@@ -116,7 +132,7 @@ const HeadquartersForm = ({ headquarter, setHeadquarter, update, getHeadquarters
                             onChange={(event) => setHeadquarter({ ...headquarter, location: { ...headquarter.location, city: event.target.value } })}
                         />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             required
                             id="headquarter-location-address"
@@ -129,7 +145,7 @@ const HeadquartersForm = ({ headquarter, setHeadquarter, update, getHeadquarters
                             onChange={(event) => setHeadquarter({ ...headquarter, location: { ...headquarter.location, address: event.target.value } })}
                         />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             required
                             id="headquarter-location-zip-code"
@@ -142,24 +158,17 @@ const HeadquartersForm = ({ headquarter, setHeadquarter, update, getHeadquarters
                             onChange={(event) => setHeadquarter({ ...headquarter, location: { ...headquarter.location, zipcode: event.target.value } })}
                         />
                     </Grid>
+                    <Grid container item xs={6} sm={6} justifyContent={"right"}>
+                        <Fab type="submit" color="primary" size="medium" aria-label="save" disabled={headquarter.name.trim() === "" || headquarter.contact.name.trim() === "" || headquarter.contact.phone.trim() === "" || headquarter.contact.email.trim() === "" || headquarter.location.city.trim() === "" || headquarter.location.address.trim() === "" || headquarter.location.zipcode.trim() === ""}>
+                            <Save />
+                        </Fab>
+                    </Grid>
+                    <Grid container item xs={6} sm={6} justifyContent={"left"}>
+                        <Fab color="error" size="medium" aria-label="cancel" onClick={() => { handleCancel() }}>
+                            <Cancel />
+                        </Fab>
+                    </Grid>
                 </Grid>
-                <Stack direction="row" spacing={1} justifyContent={"center"}>
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        sx={{ color: "white" }}
-                    >
-                        Save
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => handleCancel()}
-                    >
-                        Cancel
-                    </Button>
-                </Stack>
             </Box>
         </>
     )

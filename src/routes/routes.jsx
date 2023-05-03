@@ -2,8 +2,8 @@ import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { useSelector } from "react-redux"
 import SignIn from '../pages/SignIn'
 import Dashboard from '../components/dashboard/Dashboard'
-import Home from '../pages/Home'
 import Headquarters from '../pages/headquarters/Headquarters'
+import Users from '../pages/users/Users'
 
 export default function Routes() {
 
@@ -17,16 +17,16 @@ export default function Routes() {
                     element: <Dashboard />,
                     children: [
                         {
-                            path: "/",
-                            element: <Home />
+                            path: "*",
+                            element: <Navigate to="/" />
                         },
                         {
-                            path: "/headquarters",
+                            path: "/",
                             element: <Headquarters/>
                         },
                         {
-                            path: "*",
-                            element: <Navigate to="/" />
+                            path: "/users",
+                            element: <Users/>
                         }
                     ]
                 }
