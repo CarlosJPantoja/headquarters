@@ -4,7 +4,7 @@ import Spinner from "../../components/Spinner"
 import { Add, Business } from "@mui/icons-material"
 import { useEffect, useState } from "react"
 import firestore from '../../util/firebase'
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore"
+import { collection, getDocs, deleteDoc, doc, where, query } from "firebase/firestore"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 import HeadquartersTable from "./HeadquartersTable"
@@ -68,8 +68,22 @@ const Headquarters = () => {
             showCancelButton: true,
             cancelButtonText: 'Cancel',
             cancelButtonColor: '#d33'
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
+                const reference = collection(firestore, 'users')
+                const filter = query(reference, where('headquarter', '==', headquarter.id))
+                const cursor = await getDocs(filter)
+                const docs = cursor.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+                if (docs.length > 0) {
+                    MySwal.fire({
+                        title: 'Headquarter has users assigned!',
+                        text: 'Please reassign users before deleting this headquarter.',
+                        icon: 'error',
+                        confirmButtonText: 'Ok',
+                        confirmButtonColor: '#0464ac'
+                    })
+                    return
+                }
                 deleteDoc(doc(firestore, "headquarters", headquarter.id))
                     .then(() => {
                         MySwal.fire({
