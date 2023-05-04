@@ -69,6 +69,7 @@ const Users = () => {
             firstname: '',
             lastname: '',
             email: '',
+            password: '',
             validuntil: '',
             active: '',
             headquarter: ''
@@ -112,7 +113,7 @@ const Users = () => {
             <Header title={"Users"} />
             {!user ?
                 <>
-                    <Grid container item xs={12} sm={6} sx={{ mb: 2 }} spacing={2} paddingX={1} justifyContent={"center"}>
+                    <Grid container item xs={12} sm={6} sx={{ mb: show ? 2 : 0 }} spacing={2} paddingX={1} justifyContent={"center"}>
                         {loaded &&
                             <>
                                 <Grid item xs={12} sm={5}>
@@ -167,6 +168,7 @@ const Users = () => {
                 :
                 <UsersForm
                     user={user}
+                    users={users}
                     edit={edit}
                     headquarters={headquarters}
                     setUser={setUser}

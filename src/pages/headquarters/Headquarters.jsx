@@ -104,7 +104,7 @@ const Headquarters = () => {
             <Header title={"Headquarters"} />
             {!headquarter ?
                 <>
-                    <Grid container item xs={12} sm={4} sx={{ mb: 2 }} spacing={2} paddingX={1} justifyContent={"center"}>
+                    <Grid container item xs={12} sm={4} sx={{ mb: show ? 2 : 0 }} spacing={2} paddingX={1} justifyContent={"center"}>
                         {loaded &&
                             <Grid item xs={10}>
                                 <TextField

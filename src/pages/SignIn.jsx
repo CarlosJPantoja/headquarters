@@ -17,18 +17,20 @@ import { signInWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../util/firebase.jsx";
 import { login } from '../features/auth/authSlice'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import headquarters from '../assets/headquarters.jpg'
 import Copyright from '../components/Copyright'
-import { blue } from '@mui/material/colors'
+import { Link } from '@mui/material'
 
-const theme = createTheme({})
+const theme = createTheme({
+    palette: { primary: { main: '#0464ac' }, secondary: { main: '#04b44c' }, error: { main: '#f44336' } }
+})
 
 export default function SignIn() {
     const [showPassword, setShowPassword] = useState(false)
-    const URLParams = new URLSearchParams(window.location.search)
+
     const MySwal = withReactContent(swal)
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -46,38 +48,13 @@ export default function SignIn() {
                     title: 'Failed to login',
                     text: 'Please check your credentials',
                     confirmButtonText: 'Try again',
-                    confirmButtonColor: blue[500]
+                    confirmButtonColor: '#0464ac'
                 })
             })
     }
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword)
-    }
-
-    const toast = MySwal.mixin({
-        toast: true,
-        position: 'bottom-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', MySwal.stopTimer)
-            toast.addEventListener('mouseleave', MySwal.resumeTimer)
-        },
-    })
-
-    if (URLParams.get('expired')) {
-        toast.fire({
-            icon: 'warning',
-            title: 'Su sesión ha caducado. Vuelva a iniciar sesión',
-        })
-    }
-    if (URLParams.get('logout')) {
-        toast.fire({
-            icon: 'success',
-            title: 'Sesión finalizada',
-        })
     }
 
     return (
@@ -150,7 +127,12 @@ export default function SignIn() {
                             >
                                 Sign In
                             </Button>
-                            <Copyright sx={{ mt: 3 }} />
+                            <Typography align='center' sx={{ mt: 2 }}>
+                                <Link component={RouterLink} to="/signup" variant="body2">
+                                    Don't have an account? Sign Up
+                                </Link>
+                            </Typography>
+                            <Copyright sx={{ mt: 2 }} />
                         </Box>
                     </Box>
                 </Grid>

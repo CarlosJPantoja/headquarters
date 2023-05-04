@@ -46,6 +46,7 @@ const HeadquartersForm = ({ headquarter, headquarters, setHeadquarter, getHeadqu
                     <Grid item xs={12} sm={8}>
                         <TextField
                             required
+                            autoFocus
                             id="headquarter-name"
                             name="headquarter-name"
                             label="Name"

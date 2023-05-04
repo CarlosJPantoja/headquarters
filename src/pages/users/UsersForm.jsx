@@ -2,38 +2,25 @@ import { Grid, TextField, Box, MenuItem, Fab } from "@mui/material"
 import { doc, setDoc } from "firebase/firestore"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
-import firestore, { auth } from "../../util/firebase"
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import firestore from "../../util/firebase"
 import { Cancel, Check, Close, Save } from "@mui/icons-material"
-import { useState } from "react"
+import CryptoJS from 'crypto-js';
 
-const UsersForm = ({ user, edit, headquarters, setUser, getHeadquarters }) => {
-    const [password, setPassword] = useState('')
-
+const UsersForm = ({ user, users, edit, headquarters, setUser, getHeadquarters }) => {
     const MySwal = withReactContent(Swal)
 
     const handleSave = (event) => {
         event.preventDefault()
-        if (!edit) {
-            createUserWithEmailAndPassword(auth, user.email, password)
-                .then(() => {
-                    saveUser()
-                })
-                .catch((error) => {
-                    MySwal.fire({
-                        icon: 'error',
-                        title: 'Error saving user',
-                        text: error.message,
-                        confirmButtonText: 'Try again',
-                        confirmButtonColor: '#0464ac'
-                    })
-                })
-        } else {
-            saveUser()
+        if(users.filter(u => u.id !== user.id).filter(u => u.email.trim().toLowerCase() === user.email.trim().toLowerCase()).length > 0) {
+            MySwal.fire({
+                title: 'Email already exists!',
+                text: "Please, try with another email.",
+                icon: 'error',
+                confirmButtonText: 'Ok',
+                confirmButtonColor: '#0464ac'
+            })
+            return
         }
-    }
-
-    const saveUser = () => {
         MySwal.fire({
             title: 'User saved!',
             text: "You can see it in the table below.",
@@ -41,6 +28,9 @@ const UsersForm = ({ user, edit, headquarters, setUser, getHeadquarters }) => {
             confirmButtonText: 'Ok',
             confirmButtonColor: '#0464ac'
         })
+        if (!edit) {
+            user.password = CryptoJS.SHA512(user.password).toString()
+        }
         setDoc(doc(firestore, "users", user.id), user)
             .then(() => {
                 setUser(null)
@@ -59,6 +49,7 @@ const UsersForm = ({ user, edit, headquarters, setUser, getHeadquarters }) => {
                     <Grid item xs={12} sm={6}>
                         <TextField
                             required
+                            autoFocus
                             id="user-firstname"
                             name="user-firstname"
                             label="First name"
@@ -82,7 +73,7 @@ const UsersForm = ({ user, edit, headquarters, setUser, getHeadquarters }) => {
                             onChange={(event) => setUser({ ...user, lastname: event.target.value })}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={!edit ? 6 : 12}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             required
                             id="user-email"
@@ -95,22 +86,21 @@ const UsersForm = ({ user, edit, headquarters, setUser, getHeadquarters }) => {
                             onChange={(event) => setUser({ ...user, email: event.target.value })}
                         />
                     </Grid>
-                    {!edit &&
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                required
-                                type="password"
-                                id="user-password"
-                                name="user-password"
-                                label="Password"
-                                fullWidth
-                                autoComplete="user-password"
-                                variant="standard"
-                                value={password}
-                                onChange={(event) => setPassword(event.target.value)}
-                            />
-                        </Grid>
-                    }
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            required
+                            type="password"
+                            id="user-password"
+                            name="user-password"
+                            label="Password"
+                            fullWidth
+                            autoComplete="user-password"
+                            variant="standard"
+                            disabled={edit}
+                            value={user.password}
+                            onChange={(event) => setUser({ ...user, password: event.target.value })}
+                        />
+                    </Grid>
                     <Grid item xs={12} sm={12}>
                         <TextField
                             required
@@ -174,7 +164,7 @@ const UsersForm = ({ user, edit, headquarters, setUser, getHeadquarters }) => {
                         </TextField>
                     </Grid>
                     <Grid container item xs={6} sm={6} justifyContent={"right"}>
-                        <Fab type="submit" color="primary" size="medium" aria-label="save" disabled={user.firstname.trim() === "" || user.lastname.trim() === "" || user.email.trim() === "" || (!edit && password === '') || user.validuntil.trim() === "" || user.headquarter.trim() === "" || user.active === ""}>
+                        <Fab type="submit" color="primary" size="medium" aria-label="save" disabled={user.firstname.trim() === "" || user.lastname.trim() === "" || user.email.trim() === "" || user.password === '' || user.validuntil.trim() === "" || user.headquarter.trim() === "" || user.active === ""}>
                             <Save />
                         </Fab>
                     </Grid>

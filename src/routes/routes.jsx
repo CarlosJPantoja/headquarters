@@ -4,6 +4,7 @@ import SignIn from '../pages/SignIn'
 import Dashboard from '../components/dashboard/Dashboard'
 import Headquarters from '../pages/headquarters/Headquarters'
 import Users from '../pages/users/Users'
+import SignUp from '../pages/SignUp'
 
 export default function Routes() {
 
@@ -40,6 +41,10 @@ export default function Routes() {
                 {
                     path: "/login",
                     element: <SignIn />
+                },
+                {
+                    path: "/signup",
+                    element: <SignUp />
                 }
             ],
         {

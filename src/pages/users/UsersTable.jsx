@@ -13,6 +13,7 @@ const UsersTable = ({ users, headquarters, name, headquarter, handleEdit, handle
                     <TableRow>
                         <TableCell align="center">Name</TableCell>
                         <TableCell align="center">Email</TableCell>
+                        <TableCell align="center">Password</TableCell>
                         <TableCell align="center">Headquarter</TableCell>
                         <TableCell align="center">Valid until</TableCell>
                         <TableCell align="center">Active</TableCell>
@@ -26,6 +27,7 @@ const UsersTable = ({ users, headquarters, name, headquarter, handleEdit, handle
                         <TableRow key={user.id}>
                             <TableCell align="center">{user.firstname.trim().concat(' ', user.lastname.trim())}</TableCell>
                             <TableCell align="center">{user.email}</TableCell>
+                            <TableCell align="center">{user.password.substring(0, 10).concat('...')}</TableCell>
                             <TableCell align="center">{headquarters.find(headquarter => headquarter.id === user.headquarter).name}</TableCell>
                             <TableCell align="center">{date.format(new Date(user.validuntil + 'T00:00:00-05:00'))}</TableCell>
                             <TableCell align="center">{user.active ? <Check color="secondary" /> : <Close color="error"/>}</TableCell>
