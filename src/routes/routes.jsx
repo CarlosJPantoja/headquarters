@@ -5,6 +5,7 @@ import Dashboard from '../components/dashboard/Dashboard'
 import Headquarters from '../pages/headquarters/Headquarters'
 import Users from '../pages/users/Users'
 import SignUp from '../pages/SignUp'
+import HeadquartersReview from '../pages/headquarters/HeadquartersReview'
 
 export default function Routes() {
 
@@ -24,6 +25,10 @@ export default function Routes() {
                         {
                             path: "/",
                             element: <Headquarters/>
+                        },
+                        {
+                            path: "/:id",
+                            element: <HeadquartersReview />
                         },
                         {
                             path: "/users",

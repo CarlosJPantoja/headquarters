@@ -1,8 +1,9 @@
 import { Check, Close, Delete, Edit } from "@mui/icons-material"
-import { Fab, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
-import { Link } from "react-router-dom"
+import { Fab, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
+import { Link as RouterLink } from "react-router-dom"
 
 const HeadquartersTable = ({ headquarters, name, handleEdit, handleDelete }) => {
+
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }}>
@@ -28,7 +29,7 @@ const HeadquartersTable = ({ headquarters, name, handleEdit, handleDelete }) => 
                     .map((headquarter) => (
                         <TableRow key={headquarter.id}>
                             <TableCell align="center">
-                                <Link style={{ color: '#0464ac' }} onClick={() => { }}>
+                                <Link style={{ color: '#0464ac' }} component={RouterLink} to={`/${headquarter.id}`}>
                                     {headquarter.name}
                                 </Link>
                             </TableCell>

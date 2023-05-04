@@ -11,7 +11,7 @@ export default function Menu() {
                 </ListItemIcon>
                 <ListItemText primary="Users" />
             </ListItemButton>
-            <ListItemButton component={Link} to="/headquarters">
+            <ListItemButton component={Link} to="/">
                 <ListItemIcon>
                     <Business />
                 </ListItemIcon>
